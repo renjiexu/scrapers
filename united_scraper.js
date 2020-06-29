@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer-firefox');
 
 async function run(page, date, sleepMore) {
   if (sleepMore) {
-    console.log("2 mins......");
+    console.log("等待两分钟......");
     await page.waitFor(120000);
   }
 
@@ -29,18 +29,18 @@ async function run(page, date, sleepMore) {
     })
     await page.waitFor(3000);
     await page.waitForSelector("#fl-results");
-  
+
     // verify if the result exists: flight-result-list
     await Promise.race([
       page.waitForSelector("#fl-results .flight-result-list"),
       page.waitForSelector("#fl-results .icon-validation-summary")
     ]);
-  
+
     //page.on('console', consoleObj => console.log(consoleObj.text()));
     const priceList = await page.evaluate(resultList => {
       const notFoundIcon = document.querySelectorAll("#fl-results .icon-validation-summary");
       if (notFoundIcon.length == 1) {
-        resultList.push("N/A");
+        resultList.push("无票");
       }
       else {
         const priceText = document.querySelectorAll("#fl-results .price-point")[0];
@@ -152,22 +152,22 @@ async function main() {
 
   const page = await initPage(browser);
 
+  console.log("<br/>");
   const date = new Date();
-  console.log("<br/>")
-  const timezone =  {timeZone: 'Pacific/Pitcairn'};
+  const timezone =  {timeZone: 'America/Los_Angeles'};
   console.log(date.toLocaleDateString('en-US', timezone) + " " + date.toLocaleTimeString('en-US', timezone));
-  console.log("<br/>")
-  console.log("中文");
+  console.log("<br/>");
 
   for (let idx = 10; idx <= 31; idx++) {
     try {
       var dateStr = "Aug " + idx + ", 2020";
-      console.log("==== " + dateStr + "(" + dayOfWeek[dateStr]  + ")====<br/>")
+      const curDate = new Date();
+      console.log("==== " + dateStr + "(" + dayOfWeek[dateStr]  + ")==" + curDate.toLocaleTimeString('en-US', timezone) + "==<br/>")
       await run(page, dateStr, sleep);
       sleep = false;
     } catch (err) {
       //console.log(err);
-      console.log("ERROR");
+      console.log("搜索出错");
       sleep = true;
     }
     console.log("<br/>");
@@ -176,12 +176,13 @@ async function main() {
   for (let idx = 1; idx <= 30; idx++) {
     try {
       var dateStr = "Sep " + idx + ", 2020";
-      console.log("==== " + dateStr + "(" + dayOfWeek[dateStr]  + ")====<br/>")
+      const curDate = new Date();
+      console.log("==== " + dateStr + "(" + dayOfWeek[dateStr]  + ")==" + curDate.toLocaleTimeString('en-US', timezone) + "==<br/>")
       await run(page, dateStr, sleep);
       sleep = false;
     } catch (err) {
       //console.log(err);
-      console.log("ERROR");
+      console.log("搜索出错");
       sleep = true;
     }
     console.log("<br/>");
@@ -190,12 +191,13 @@ async function main() {
   for (let idx = 1; idx <= 9; idx++) {
     try {
       var dateStr = "Oct " + idx + ", 2020";
-      console.log("==== " + dateStr + "(" + dayOfWeek[dateStr]  + ")====<br/>")
+      const curDate = new Date();
+      console.log("==== " + dateStr + "(" + dayOfWeek[dateStr]  + ")==" + curDate.toLocaleTimeString('en-US', timezone) + "==<br/>")
       await run(page, dateStr, sleep);
       sleep = false;
     } catch (err) {
       //console.log(err);
-      console.log("ERROR");
+      console.log("搜索出错");
       sleep = true;
     }
     console.log("<br/>");
